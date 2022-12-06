@@ -2,5 +2,4 @@ env
 flask-env
 __pycache__
 notes
-configuration.py
 .pyc

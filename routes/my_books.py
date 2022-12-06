@@ -6,7 +6,7 @@ from models import Rental, Book
 from main import db
 from datetime import timedelta
 import os
-import configuration
+
 
 
 my_books_routes = Blueprint('my_books_routes', __name__, template_folder='templates')

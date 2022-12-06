@@ -6,7 +6,6 @@ import re
 from main import jwt
 from main import db
 from models import TokenBlocklist, User, Roles
-import configuration as config
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required, set_access_cookies, verify_jwt_in_request
 import os
 

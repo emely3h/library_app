@@ -4,7 +4,6 @@ import enum
 from sqlalchemy import Boolean, DateTime, Enum, exc
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash
-import configuration
 import logging
 import os
 
