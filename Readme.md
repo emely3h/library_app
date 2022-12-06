@@ -8,9 +8,7 @@ Prerequisites: python3, pip
 
 `$ pip install -r requirements.txt`
 
-`$ export FLASK_APP=main`
-
-`$ flask run`
+`$ flask --app main run`
 
 The app can be accessed at localhost:5000
 
