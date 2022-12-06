@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h1 style="color:red;">Please register</h1>
+
+  <br>
+  <form action="" method="post">
+    <input type="text" placeholder="Email'" name="email" value="{{request.form.email }}">
+    <input type="password" placeholder="Password" name="password" value="{{request.form.password }}">
+    <input type="username" placeholder="Username" name="username" value="{{request.form.username }}">
+    <input type="password" placeholder="Confirm password" name="password_confirm" value="{{request.form.password_confirm}}">
+    <input class="btn btn-default" type="submit" value="Register">
+  </form>
+  {% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+  {% endif %}
+{% endblock content %}

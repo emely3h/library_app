@@ -1,0 +1,126 @@
+body {
+  background: #fafafa;
+  color: #333333;
+}
+
+.bg-image{
+height: 400px;
+width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+h1 {
+  font-size: 25px;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.available{
+  color: green;
+}
+
+.borrowed {
+  color: red;
+}
+
+
+.alert {
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.alert-error {
+  border-color: darkred;
+  background-color: red;
+  color: white;
+}
+
+.alert-info {
+  border-color: green;
+  background-color: green;
+  color: black;
+}
+
+#form-btn {
+  background-color: #343a40;
+  color: #8c9093;
+  border: none;
+  border-radius: 5px;
+  width: fit-content;
+  margin-right: 20px;
+}
+
+form { 
+  display: inline-block;
+  padding: 0;
+}
+
+#form-btn-2 {
+  background-color: #5b7b9b;
+  color: #d7d7d7;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
+  height: 30px;
+  width: 100px;
+  margin-left: 15px;
+  text-align: center;
+  vertical-align: middle;
+  display: inline;
+  padding: middle;
+}
+
+#form-btn:hover {
+  color: #d4d9dd;
+}
+
+#form-btn-2:hover {
+  color: #000000;
+}
+.grid {
+  display: grid;
+
+  grid-gap: 15px;
+  padding: 15px;
+}
+
+.center-text {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  border: 2px dashed #f69c55;
+}
+
+.card {
+  width: 300px;
+}

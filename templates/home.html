@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block content %}
+<br>
+<br>
+<h1 class="text-center">Bookshelf</h1>
+<br>
+
+<!--  <p>TEST</p>
+  <p>VALUE {{ value }}</p>
+  <a href="{{ value }}">click here</a>
+  <a href="javascript:alert('unsafe');">click here</a> -->
+
+<div class="book-container">
+  {%for book in books %}
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <h5 class="card-title">{{ book.title }}</h5>
+        </div>
+        <div class="col">
+          <form method="POST" action="/reading-list" class="form-btn">
+            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+            <input name="id" type="hidden" value="{{ book.id }}">
+            <button id="form-btn" class="nav-link" type="submit">+</button>
+          </form>
+        </div>
+      </div>
+      <small class="text-muted">By {{book.author}}</small>
+      <p class="card-text {{book.status.name}}">{{book.status.name}}</p>
+      <div class="row">
+        <div class="col">
+          {% if book.status.name == "available" %}
+          <form method="POST" action="/borrow-book" class="form-btn">
+            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+            <input name="id" type="hidden" value="{{ book.id }}">
+            <button id="form-btn" class="nav-link" type="submit">Borrow</button>
+          </form>
+          {% elif book.status.name == "borrowed" %}
+          <form method="POST" action="/request-book" class="form-btn">
+            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+            <input name="id" type="hidden" value="{{ book.id }}">
+            <button id="form-btn" class="nav-link" type="submit">Request</button>
+          </form>
+          {% endif %}
+        </div>
+        <div class="col">
+          <form method="GET" action="/book" class="form-btn">
+            <input name="id" type="hidden" value="{{book.id}}">
+            <button id="form-btn" class="nav-link" type="submit">Details</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+</div>
+<br>
+<br>
+{% endblock content %}

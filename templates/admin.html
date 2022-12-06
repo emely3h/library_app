@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="text-center">Admin Dashboard</h1>
+<br>
+<br>
+
+<form method="POST" action="/admin/add-book" class="form-btn">
+    <input placeholder="Title" name="title" value="{{request.form.title }}">
+    <input placeholder="Author" name="author" value="{{request.form.author }}">
+    <input placeholder="description" name="description" value="{{request.form.description }}">
+    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+    <br>
+    <button style="margin-top: 15px" id="form-btn" class="nav-link" type="submit">Add Book</button>
+</form>
+<br>
+<br>
+<br>
+<h5>Borrowed Books</h5>
+<br>
+{% for book in borrowed_books %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ book.title }}</h5>
+        <small class="text-muted">By {{book.author}}</small>
+        <br>
+        <div class="row">
+            <div class="col">
+            <form method="POST" action="/admin/book-status" class="form-btn">
+                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                <input name="id" type="hidden" value="{{book.id}}">
+                <input name="status" type="hidden" value="available">
+                <button id="form-btn" class="nav-link" type="submit">Return</button>
+            </form>
+            </div>
+            <div class="col">
+                <form method="POST" action="/admin/book-status" class="form-btn">
+                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                <input name="id" type="hidden" value="{{book.id}}">
+                <input name="status" type="hidden" value="missing">
+                <button id="form-btn" class="nav-link" type="submit">Missing</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<br>
+<br>
+<h5>Missing Books</h5>
+<br>
+<br>
+{% for book in missing_books %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ book.title }}</h5>
+        <small class="text-muted">By {{book.author}}</small>
+        <br>
+        <form method="POST" action="/admin/book-status" class="form-btn">
+            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+            <input name="id" type="hidden" value="{{book.id}}">
+            <input name="status" type="hidden" value="available">
+            <button id="form-btn" class="nav-link" type="submit">Found and returned</button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+</div> 
+
+{% endblock content %}
