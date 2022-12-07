@@ -69,8 +69,8 @@
                 {% endif %}
               </div>
               <div class="col">
-                <form method="GET" action="/book" class="form-btn">
-                  <input name="id" type="hidden" value="{{book.id}}">
+                <form method="GET" action="{{ test }}" class="form-btn">
+                  <input name="id" type="hidden" value="{{ book.id }}">
                   <button id="form-btn" class="nav-link" type="submit">Details</button>
                 </form>
               </div>
@@ -81,4 +81,4 @@
   {% endfor %}
   {% endblock content %}
 </html>
-<!-- javascript to perform delete request -->
+

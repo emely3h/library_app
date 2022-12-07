@@ -24,12 +24,17 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=50)
 
     app.config['JWT_COOKIE_CSRF_PROTECT'] = True 
     app.config['JWT_CSRF_CHECK_FORM'] = True
     app.config['JWT_ACCESS_CSRF_FIELD_NAME'] = 'csrf_token'
 
+    app.config.update(
+        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE='Lax',
+    )
 
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///project.db"
 
@@ -52,12 +57,14 @@ def create_app():
         from routes.book import book_routes
         from routes.my_books import my_books_routes
         from routes.home import home_routes
+        from routes.configuration import configuration
 
         app.register_blueprint(admin_routes)
         app.register_blueprint(login_routes)
         app.register_blueprint(book_routes)
         app.register_blueprint(my_books_routes)
         app.register_blueprint(home_routes)
+        app.register_blueprint(configuration)
         return app
 
 

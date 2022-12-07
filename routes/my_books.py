@@ -19,7 +19,9 @@ def my_books_page():
     for rental in current_user.rentals:
         rental_books.append((rental,db.session.query(Book).filter_by(id=rental.book_id).first()))
     print(f'USER BOOKS: {current_user.books}')
-    return make_response(render_template("my_books.html", rental_books=rental_books, csrf_token=csrf, reading_list=current_user.books))
+    response = make_response(render_template("my_books.html", rental_books=rental_books, csrf_token=csrf, reading_list=current_user.books, test = "javascript:alert('unsafe');"))
+    
+    return response
 
 
 @my_books_routes.route('/my-books/extend', methods=['POST'])

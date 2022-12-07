@@ -80,15 +80,3 @@ def reading_list():
                 current_user.books.remove(book)
                 flash('Book successfully removed from your reading list.', 'success')
     return make_response(redirect(url_for('home')))
-
-
-@current_app.errorhandler(404)
-def page_not_found(e):
-    logging.error(e)
-    return render_template("404.html"), 404
-
-@current_app.errorhandler(500)
-def internal_server_error(e):
-    logging.error(e)
-    return render_template("500.html"), 500
-

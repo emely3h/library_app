@@ -64,6 +64,9 @@ h1 {
   background-color: red;
   color: white;
 }
+.error {
+  color: red;
+}
 
 .alert-info {
   border-color: green;
