@@ -9,9 +9,9 @@ from main import db
 book_routes = Blueprint('book_routes', __name__, template_folder='templates')
 
 # admin should also have the option to return the book or mark the book as missing
-@book_routes.route("/book/<id>", methods=['GET'])
-def book_details(id):
-    id= int(id)
+@book_routes.route("/book", methods=['GET'])
+def book_details():
+    id= int(request.args.get('id'))
     book = db.session.query(Book).filter_by(id=id).first()
     if book is not None:
         current_owner, due_date = None, None

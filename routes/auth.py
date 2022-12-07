@@ -25,7 +25,7 @@ def sign_up():
 
             if user is not None and check_password_hash(user.password, password) == True:
                 access_token = create_access_token(identity=user.id)
-                response = redirect(url_for('home'))
+                response = redirect(url_for('home_routes.home'))
                 set_access_cookies(response, access_token)
                 flash(f'Successfully logged in. Welcome {user.username}!', 'info')
                 return response
@@ -59,11 +59,11 @@ def register():
             db.session.commit()
 
             access_token = create_access_token(identity=new_user.id)
-            response = redirect(url_for('home'))
+            response = redirect(url_for('home_routes.home'))
             set_access_cookies(response, access_token)
 
             flash(f'Successfully registered and logged in. Welcome {new_user.username}!', 'info')
-            return redirect(url_for('home'))
+            return redirect(url_for('home_routes.home'))
         except ValueError as vex:
             return make_response(render_template('register.html', error=str(vex)), 400)
         except Exception as ex:
@@ -88,7 +88,7 @@ def modify_token():
     db.session.add(TokenBlocklist(jti=jti, created_at=now))
     db.session.commit()
     flash('Successfully logged out.', 'success')
-    return make_response(redirect(url_for('home')))
+    return make_response(redirect(url_for('home_routes.home')))
 
 @current_app.after_request
 def refresh_expiring_jwts(response):
@@ -116,17 +116,17 @@ def check_if_token_is_revoked(jwt_header, jwt_payload: dict):
 @jwt.unauthorized_loader
 def token_invalid():
     flash('Please log in.', 'error')
-    return make_response(redirect(url_for('home')), 401) # should add status code 401, problem with redirect page showing
+    return make_response(redirect(url_for('home_routes.home')), 401) # should add status code 401, problem with redirect page showing
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
     flash('Token expired, please log in again.', 'error')
-    return make_response(redirect(url_for('home')), 401)
+    return make_response(redirect(url_for('home_routes.home')), 401)
 
 @jwt.revoked_token_loader
 def token_revoked_callback(jwt_header, jwt_payload):
     flash('You are currently logged out, log in again.', 'error')
-    return make_response(redirect(url_for('home')), 401)
+    return make_response(redirect(url_for('home_routes.home')), 401)
 
 
 def check_email(email):  

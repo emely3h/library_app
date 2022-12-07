@@ -39,6 +39,7 @@ def create_app():
     from models import db_seed
     
     if __name__ == 'main':
+        print('In debug mode!')
         app.run(debug=True) 
 
     with app.app_context():

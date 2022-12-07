@@ -18,14 +18,13 @@ def my_books_page():
     csrf = get_csrf_token(request.cookies.get('access_token_cookie'))
     for rental in current_user.rentals:
         rental_books.append((rental,db.session.query(Book).filter_by(id=rental.book_id).first()))
-
+    print(f'USER BOOKS: {current_user.books}')
     return make_response(render_template("my_books.html", rental_books=rental_books, csrf_token=csrf, reading_list=current_user.books))
 
 
 @my_books_routes.route('/my-books/extend', methods=['POST'])
 @jwt_required()
 def extend_book():
-    print('ENTERED 123')
     id = int(request.form.get('id'))
 
     rental = db.session.query(Rental).filter_by(book_id=id, user_id=current_user.id).one_or_404()
@@ -35,12 +34,11 @@ def extend_book():
     else:
         if rental.extended is False:
             rental.extended = True
-            rental.due_date = rental.due_date + timedelta(days=os.getenv('EXTENSION_TIME'))
+            rental.due_date = rental.due_date + timedelta(days=int(os.getenv('EXTENSION_TIME')))
             db.session.add(rental)
             db.session.commit()
-            flash('Lending period successfully extended', 'success')
+            flash('Lending period successfully extended.', 'success')
         else:
             flash('You can only extend the renting period once.', 'error')
-        flash('Some error occured, please try again.', 'error')
     return make_response(redirect(url_for('my_books_routes.my_books_page')))
             

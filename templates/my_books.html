@@ -21,8 +21,8 @@
                   </form>
             </div>
             <div class="col">
-                <form method="POST" action="/" class="form-btn">
-                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                <form method="GET" action="/book" class="form-btn">
+                    <input name="id" type="hidden" value="{{ rental_book[1].id }}">
                     <button id="form-btn" class="nav-link" type="submit">Details</button>
                 </form>
             </div>
@@ -69,7 +69,7 @@
                 {% endif %}
               </div>
               <div class="col">
-                <form method="POST" action="/book" class="form-btn">
+                <form method="GET" action="/book" class="form-btn">
                   <input name="id" type="hidden" value="{{book.id}}">
                   <button id="form-btn" class="nav-link" type="submit">Details</button>
                 </form>
