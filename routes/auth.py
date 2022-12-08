@@ -70,16 +70,6 @@ def register():
             print(ex)
             return make_response(render_template('register.html', error='Some error occurred. Please try again.'), 500)
 
-@jwt.user_identity_loader
-def user_identity_lookup(user):
-    return user
-
-@jwt.user_lookup_loader
-def user_lookup_callback(_jwt_header, jwt_data):
-    identity = jwt_data["sub"]
-    return User.query.filter_by(id=identity).one_or_none()
-
-
 @login_routes.route("/auth/logout", methods=['POST'])
 @jwt_required()
 def modify_token():
@@ -89,6 +79,15 @@ def modify_token():
     db.session.commit()
     flash('Successfully logged out.', 'success')
     return make_response(redirect(url_for('home_routes.home')))
+
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.query.filter_by(id=identity).one_or_none()
 
 @current_app.after_request
 def refresh_expiring_jwts(response):
@@ -112,17 +111,25 @@ def check_if_token_is_revoked(jwt_header, jwt_payload: dict):
 
     return token is not None
 
+# invalid jwt
+@jwt.invalid_token_loader
+def invalid_credentials(jwt_header):
+    flash('Invalid credentials, log in again.', 'error')
+    return make_response(redirect(url_for('home_routes.home')), 401)
 
+# no jwt, no/invalid csrf
 @jwt.unauthorized_loader
-def token_invalid():
+def token_invalid(jwt_header):
     flash('Please log in.', 'error')
     return make_response(redirect(url_for('home_routes.home')), 401) # should add status code 401, problem with redirect page showing
 
+# expired jwt
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
     flash('Token expired, please log in again.', 'error')
     return make_response(redirect(url_for('home_routes.home')), 401)
 
+# revoked jwt
 @jwt.revoked_token_loader
 def token_revoked_callback(jwt_header, jwt_payload):
     flash('You are currently logged out, log in again.', 'error')

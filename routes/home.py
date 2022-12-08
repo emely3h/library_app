@@ -21,7 +21,6 @@ def home():
         csrf = get_csrf_token(jwt)
         logged_in = True
     except Exception as e:
-        print('e entered !!!')
         csrf = 'not-valid'
     response = make_response(render_template("home.html", books=books, logged_in=logged_in, csrf_token=csrf))
     
@@ -48,8 +47,8 @@ def borrow_book():
             flash(f'Book is currently {book.status.name}!', 'error')
     else:
         flash('The book you are looking for does not exist.', 'error')
-        return make_response(redirect(url_for('home')))
-    return make_response(redirect(url_for('home')))
+        return make_response(redirect(url_for('home_routes.home')))
+    return make_response(redirect(url_for('home_routes.home')))
 
 @home_routes.route("/book-request", methods=['GET'])
 def book_request():
@@ -79,4 +78,4 @@ def reading_list():
             else:
                 current_user.books.remove(book)
                 flash('Book successfully removed from your reading list.', 'success')
-    return make_response(redirect(url_for('home')))
+    return make_response(redirect(url_for('home_routes.home')))

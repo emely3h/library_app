@@ -23,4 +23,4 @@ def book_details():
         return make_response(render_template("book.html", book=book, current_owner=current_owner, due_date=due_date ))
     else:
         flash('The book you are looking for does not exist.', 'error')
-    return make_response(redirect(url_for('home')))
+    return make_response(redirect(url_for('home_routes.home')))

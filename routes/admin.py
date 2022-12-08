@@ -17,7 +17,7 @@ def admin_required():
                 return fn(*args, **kwargs)
             else:
                 flash('Admins only!', 'error')
-                return make_response(redirect(url_for('home')))
+                return make_response(redirect(url_for('home_routes.home')), 403)
         return decorator
     return wrapper
 
