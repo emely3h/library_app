@@ -3,3 +3,4 @@ flask-env
 __pycache__
 notes
 .pyc
+instance
