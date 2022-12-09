@@ -3,5 +3,14 @@
     <div class="container">
       <h1 class="text-center">Make a Book Request</h1>
       <br>
+      <form action="/book-request" method="post">
+        <input type="text" placeholder="title" name="title">
+        <input type="text" placeholder="author" name="author">
+        <input type="message" placeholder="message" name="message">
+        <input class="btn btn-default" type="submit" value="Submit">
+      </form>
+      <br>
+      <br>
+      <p>Consider adding your slack or email adress, so that the admin is able to reach you for any follow up questions.</p>
   {% endblock content %}
 </html>

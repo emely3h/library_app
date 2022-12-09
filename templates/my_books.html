@@ -43,9 +43,10 @@
                 <h5 class="card-title">{{ book.title }}</h5>
               </div>
               <div class="col">
-                <form method="DELETE" action="/reading-list" class="form-btn">
+                <form method="POST" action="/reading-list" class="form-btn">
                   <input name="id" type="hidden" value="{{ book.id }}">
                   <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                  <input name="method" type="hidden" value="delete">
                   <button id="form-btn" class="nav-link" type="submit">Remove</button>
                 </form>
               </div>

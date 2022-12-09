@@ -1,10 +1,8 @@
-from flask import flash, redirect, render_template, request, make_response, request, url_for, current_app, Blueprint
+from flask import flash, redirect, render_template, request, make_response, request, url_for, current_app, Blueprint, request
 from flask_jwt_extended import current_user, get_csrf_token, verify_jwt_in_request
 from flask_jwt_extended import jwt_required
-from models import Book, Rental, Status
+from models import Book, Rental, Status, BookRequest
 from main import db
-
-import logging
 
 home_routes = Blueprint('home_routes', __name__, template_folder='templates')
 
@@ -14,7 +12,7 @@ home_routes = Blueprint('home_routes', __name__, template_folder='templates')
 def home():
     logged_in = False
     try:
-        books = Book.query.all()
+        books = db.session.query(Book).filter(Book.status != Status.removed).all()
         """ value = "javascript:alert('unsafe')" """
         jwt = request.cookies.get('access_token_cookie')
         csrf = ''
@@ -50,12 +48,38 @@ def borrow_book():
         return make_response(redirect(url_for('home_routes.home')))
     return make_response(redirect(url_for('home_routes.home')))
 
-@home_routes.route("/book-request", methods=['GET'])
+@home_routes.route("/book-request", methods=['GET', 'POST'])
 def book_request():
+    if request.method == 'POST':
+        data = request.form
+        title, author, message = data.get('title'), data.get('author'), data.get('message')
+        if len(title) > 3 and  len(author) > 3:
+            book_request = BookRequest(title=title, author=author, message=message)
+            db.session.add(book_request)
+            db.session.commit()
+            flash('Book request successfully forwarded.', 'success')
+            return make_response(redirect(url_for('home_routes.home')))
+        else:
+            flash('Enter a valid author and title to make a book request.')
     return make_response(render_template("book_request.html"))
 
+@home_routes.route('/request', methods=['POST'])
+@jwt_required()
+def request_borrowed_book():
+    id = request.form.get('id')
+    book = db.session.query(Book).filter_by(id=id, status=Status.borrowed).one_or_404()
+    rental = db.session.query(Rental).filter(Rental.book_id == book.id, Rental.return_date == None).one_or_404()
+    rental.extending = False
+    db.session.add(rental)
+    db.session.commit()
+    flash('Request successfully made.', 'success')
+    return make_response(redirect(url_for('home_routes.home')))
+
+
 @home_routes.route('/reading-list', methods=['POST', 'DELETE'])
+@jwt_required()
 def reading_list():
+    method = request.form.get('method')
 
     jwt = verify_jwt_in_request(optional=True)
     if jwt is None:
@@ -63,19 +87,20 @@ def reading_list():
     else:
         book = db.session.query(Book).filter_by(id=request.form.get('id')).one_or_404()
         
-        if request.method == 'POST':
+        if method == 'add': #request.method == 'POST':
             if book in current_user.books:
-                flash('This book has already been added to your reading list.', 'info')
+                flash('This book already has been added to your reading list.', 'info')
             else:
                 current_user.books.append(book)
                 db.session.add(current_user)
                 db.session.commit()
                 flash('Book successfully added to your reading list.', 'success')
-        elif request.method == 'DELETE':
-            print('entered')
+        if method == 'delete': #elif request.method == 'DELETE':
             if book not in current_user.books:
                 flash('This book is not in your reading list.', 'info')
             else:
                 current_user.books.remove(book)
+                db.session.add(current_user)
+                db.session.commit()
                 flash('Book successfully removed from your reading list.', 'success')
     return make_response(redirect(url_for('home_routes.home')))

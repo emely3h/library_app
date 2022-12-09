@@ -1,5 +1,4 @@
-from curses import flash
-from flask import Blueprint, make_response, redirect, render_template, request, url_for
+from flask import Blueprint, make_response, redirect, render_template, request, url_for, flash
 from flask_jwt_extended import current_user, get_csrf_token, jwt_required
 
 from models import Rental, Book
@@ -17,8 +16,8 @@ def my_books_page():
     rental_books = []
     csrf = get_csrf_token(request.cookies.get('access_token_cookie'))
     for rental in current_user.rentals:
-        rental_books.append((rental,db.session.query(Book).filter_by(id=rental.book_id).first()))
-    print(f'USER BOOKS: {current_user.books}')
+        if rental.return_date is None:
+            rental_books.append((rental,db.session.query(Book).filter_by(id=rental.book_id).first()))
     response = make_response(render_template("my_books.html", rental_books=rental_books, csrf_token=csrf, reading_list=current_user.books, test = "javascript:alert('unsafe');"))
     
     return response
@@ -30,17 +29,14 @@ def extend_book():
     id = int(request.form.get('id'))
 
     rental = db.session.query(Rental).filter_by(book_id=id, user_id=current_user.id).one_or_404()
-
-    if rental is None:
-        flash('you can only renew books that you are currently borrowing.', 'error')
+    
+    if rental.extending is True:
+        rental.extending = False
+        rental.due_date = rental.due_date + timedelta(days=int(os.getenv('EXTENSION_TIME')))
+        db.session.add(rental)
+        db.session.commit()
+        flash('Lending period successfully extended.', 'success')
     else:
-        if rental.extended is False:
-            rental.extended = True
-            rental.due_date = rental.due_date + timedelta(days=int(os.getenv('EXTENSION_TIME')))
-            db.session.add(rental)
-            db.session.commit()
-            flash('Lending period successfully extended.', 'success')
-        else:
-            flash('You can only extend the renting period once.', 'error')
+        flash('Extending not possible, you either already extended or someone else is requesting the book.', 'error')
     return make_response(redirect(url_for('my_books_routes.my_books_page')))
             

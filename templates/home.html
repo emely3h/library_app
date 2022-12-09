@@ -5,11 +5,6 @@
 <h1 class="text-center">Bookshelf</h1>
 <br>
 
-<!--  <p>TEST</p>
-  <p>VALUE {{ value }}</p>
-  <a href="{{ value }}">click here</a>
-  <a href="javascript:alert('unsafe');">click here</a> -->
-
 <div class="book-container">
   {%for book in books %}
   <div class="card">
@@ -22,6 +17,7 @@
           <form method="POST" action="/reading-list" class="form-btn">
             <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
             <input name="id" type="hidden" value="{{ book.id }}">
+            <input name="method" type="hidden" value="add">
             <button id="form-btn" class="nav-link" type="submit">+</button>
           </form>
         </div>
@@ -37,7 +33,7 @@
             <button id="form-btn" class="nav-link" type="submit">Borrow</button>
           </form>
           {% elif book.status.name == "borrowed" %}
-          <form method="POST" action="/request-book" class="form-btn">
+          <form method="POST" action="/request" class="form-btn">
             <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
             <input name="id" type="hidden" value="{{ book.id }}">
             <button id="form-btn" class="nav-link" type="submit">Request</button>

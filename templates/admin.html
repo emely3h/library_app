@@ -64,6 +64,51 @@
     </div>
 </div>
 {% endfor %}
+<br>
+<br>
+<h5>Latest Book Requests</h5>
+<br>
+<br>
+{% for request in book_request %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ request.title }}</h5>
+        <small class="text-muted">By {{request.author}}</small>
+        <br>
+        <p>{{ request.message }}</p>
+        <form method="POST" action="/admin/book-request" class="form-btn">
+            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+            <input name="id" type="hidden" value="{{ request.id }}">
+            <button id="form-btn" class="nav-link" type="submit">Delete Request</button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+<br>
+<br>
+<h5>All Books</h5>
+<br>
+<br>
+{% for book in all_books %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ book.title }}</h5>
+        <small class="text-muted">By {{book.author}}</small>
+        <br>
+        <div class="row">
+            <div class="col">
+            <form method="POST" action="/admin/book-status" class="form-btn">
+                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                <input name="id" type="hidden" value="{{book.id}}">
+                <input name="status" type="hidden" value="removed">
+                <button id="form-btn" class="nav-link" type="submit">Remove</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endfor %}
 </div> 
 
 {% endblock content %}

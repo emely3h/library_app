@@ -14,18 +14,43 @@
         {% endif %}
     </div>
     <div class="col">
-        <p>{{book.author}}</p>
-        <p>{{book.status.name}}</p>
-        <p>{{book.description}}</p>
+        <p>{{ book.author }}</p>
+        <p>{{ book.status.name }}</p>
+        <p>{{ book.description }}</p>
         {% if book.status.name == 'borrowed' %}
-            <p>{{due_date.strftime('%d.%m.%Y')}}</p>
-            <p>{{current_owner}}</p>
+            <p>{{ due_date.strftime('%d.%m.%Y') }}</p>
+            <p>{{ current_owner }}</p>
         {% endif %}
     </div>
 </div>
 <br>
 <br>
-<h3>Renting history</h3>
+{% if admin == True %}
+    <h4>Renting history</h4>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Borrow Date</th>
+            <th scope="col">Return Date</th>
+            <th scope="col">User</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rental in renting_hisotry %}
+            <tr>
+                <td>{{ rental.borrow_date.strftime('%d.%m.%Y') }}</td>
+                {% if rental.return_date is not none %}
+                    <td>{{ rental.return_date.strftime('%d.%m.%Y') }}</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+                <td>{{ users[loop.index-1] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
 </div> 
 
 {% endblock content %}

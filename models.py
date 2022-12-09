@@ -15,6 +15,7 @@ class Status(enum.Enum):
     available = "available"
     borrowed = "borrowed"
     missing = "missing"
+    removed = 'removed'
 
 reading_list = db.Table('reading_list', 
     db.Column('id', db.Integer, primary_key=True),
@@ -59,20 +60,27 @@ class Rental(db.Model):
     borrow_date = db.Column(DateTime, nullable=False)
     due_date = db.Column(DateTime, nullable=False)
     return_date = db.Column(DateTime, nullable=True)
-    extended = db.Column(Boolean, nullable=False)
+    extending = db.Column(Boolean, nullable=False)
     def __init__(self, book_id, user_id, **kwargs):
         super(Rental, self).__init__(**kwargs)
         self.book_id = book_id
         self.user_id = user_id
         self.borrow_date = datetime.utcnow()
-        self.due_date = datetime.utcnow() + timedelta(os.getenv('STANDARD_RENTAL_TIME'))
-        self.extended = False
+        self.due_date = datetime.utcnow() + timedelta(int(os.getenv('STANDARD_RENTAL_TIME')))
+        self.extending = True
 
 
 class TokenBlocklist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(36), nullable=False, index=True)
     created_at = db.Column(db.DateTime, nullable=False)
+
+class BookRequest (db.Model):
+    __tablename__ = 'book_request'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    author = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.String(500), nullable=True)
 
 def db_seed():
     admin = User(username = 'admin', email = 'admin@gmail.com', role=Roles.admin, password = os.getenv('ADMIN_PASSWORD'))
