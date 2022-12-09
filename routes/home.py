@@ -1,5 +1,5 @@
-from flask import flash, redirect, render_template, request, make_response, request, url_for, current_app, Blueprint, request
-from flask_jwt_extended import current_user, get_csrf_token, verify_jwt_in_request
+from flask import flash, redirect, render_template, request, make_response, request, url_for, Blueprint, request
+from flask_jwt_extended import current_user, get_csrf_token
 from flask_jwt_extended import jwt_required
 from models import Book, Rental, Status, BookRequest
 from main import db
@@ -13,7 +13,6 @@ def home():
     logged_in = False
     try:
         books = db.session.query(Book).filter(Book.status != Status.removed).all()
-        """ value = "javascript:alert('unsafe')" """
         jwt = request.cookies.get('access_token_cookie')
         csrf = ''
         csrf = get_csrf_token(jwt)
@@ -21,8 +20,6 @@ def home():
     except Exception as e:
         csrf = 'not-valid'
     response = make_response(render_template("home.html", books=books, logged_in=logged_in, csrf_token=csrf))
-    
-    # response.headers['Content-Security-Policy'] = "style-src https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" include also main.css
     return response
 
 
@@ -30,22 +27,18 @@ def home():
 @home_routes.route('/borrow-book', methods=['POST'])
 @jwt_required()
 def borrow_book():
-    id= int(request.form.get('id'))# what happens if id NONE?
-    book = db.session.query(Book).filter_by(id=id).first()
-    if book is not None:
-        if book.status == Status.available:
-            book.status = Status.borrowed
-            rental = Rental(book.id, current_user.id)
-            db.session.add(current_user)
-            db.session.add(book)
-            db.session.add(rental)
-            db.session.commit()
-            flash('Book successfully borrowed!', 'success')
-        else:
-            flash(f'Book is currently {book.status.name}!', 'error')
+    id= request.form.get('id')
+    book = db.session.query(Book).filter_by(id=id).one_or_404()
+    if book.status == Status.available:
+        book.status = Status.borrowed
+        rental = Rental(book.id, current_user.id)
+        db.session.add(current_user)
+        db.session.add(book)
+        db.session.add(rental)
+        db.session.commit()
+        flash('Book successfully borrowed!', 'success')
     else:
-        flash('The book you are looking for does not exist.', 'error')
-        return make_response(redirect(url_for('home_routes.home')))
+        flash(f'Book is currently {book.status.name}!', 'error')
     return make_response(redirect(url_for('home_routes.home')))
 
 @home_routes.route("/book-request", methods=['GET', 'POST'])
@@ -81,26 +74,22 @@ def request_borrowed_book():
 def reading_list():
     method = request.form.get('method')
 
-    jwt = verify_jwt_in_request(optional=True)
-    if jwt is None:
-        flash('You need to login first.', 'error')
-    else:
-        book = db.session.query(Book).filter_by(id=request.form.get('id')).one_or_404()
-        
-        if method == 'add': #request.method == 'POST':
-            if book in current_user.books:
-                flash('This book already has been added to your reading list.', 'info')
-            else:
-                current_user.books.append(book)
-                db.session.add(current_user)
-                db.session.commit()
-                flash('Book successfully added to your reading list.', 'success')
-        if method == 'delete': #elif request.method == 'DELETE':
-            if book not in current_user.books:
-                flash('This book is not in your reading list.', 'info')
-            else:
-                current_user.books.remove(book)
-                db.session.add(current_user)
-                db.session.commit()
-                flash('Book successfully removed from your reading list.', 'success')
+    book = db.session.query(Book).filter_by(id=request.form.get('id')).one_or_404()
+    
+    if method == 'add': #request.method == 'POST':
+        if book in current_user.books:
+            flash('This book already has been added to your reading list.', 'info')
+        else:
+            current_user.books.append(book)
+            db.session.add(current_user)
+            db.session.commit()
+            flash('Book successfully added to your reading list.', 'success')
+    if method == 'delete': #elif request.method == 'DELETE':
+        if book not in current_user.books:
+            flash('This book is not in your reading list.', 'info')
+        else:
+            current_user.books.remove(book)
+            db.session.add(current_user)
+            db.session.commit()
+            flash('Book successfully removed from your reading list.', 'success')
     return make_response(redirect(url_for('home_routes.home')))

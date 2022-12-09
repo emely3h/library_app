@@ -1,12 +1,11 @@
 import datetime
-from functools import wraps
-from flask import Blueprint, flash, redirect, render_template, request, make_response, jsonify, url_for, current_app
+from flask import Blueprint, flash, redirect, render_template, request, make_response, url_for, current_app
 from werkzeug.security import check_password_hash
 import re
 from main import jwt
 from main import db
 from models import TokenBlocklist, User, Roles
-from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required, set_access_cookies, verify_jwt_in_request
+from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required, set_access_cookies
 import os
 
 login_routes = Blueprint('login_routes', __name__, template_folder='templates')
@@ -32,8 +31,8 @@ def sign_up():
                     
             else:
                 raise ValueError('Invalid email or password')
-        except ValueError as vex:
-            return make_response(render_template('login.html', error=str(vex)), 400)
+        except ValueError as ex:
+            return make_response(render_template('login.html', error=str(ex)), 400)
 
 @login_routes.route('/auth/register', methods=['POST', 'GET'])
 def register():
@@ -100,8 +99,7 @@ def refresh_expiring_jwts(response):
             set_access_cookies(response, access_token)
         return response
     except (RuntimeError, KeyError):
-        # Case where there is not a valid JWT. Just return the original response
-        return response
+        return response # Case where there is not a valid JWT. Just return the original response
 
 @jwt.token_in_blocklist_loader
 def check_if_token_is_revoked(jwt_header, jwt_payload: dict):

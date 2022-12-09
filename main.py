@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 import os
@@ -24,7 +25,7 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=50)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=20)
 
     app.config['JWT_COOKIE_CSRF_PROTECT'] = True 
     app.config['JWT_CSRF_CHECK_FORM'] = True
@@ -48,7 +49,7 @@ def create_app():
         app.run(debug=True) 
 
     with app.app_context():
-        
+        logging.getLogger().setLevel(logging.INFO)
         db.create_all()
         db_seed()
 

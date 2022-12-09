@@ -8,18 +8,17 @@ from main import db
 
 book_routes = Blueprint('book_routes', __name__, template_folder='templates')
 
-# admin should also have the option to return the book or mark the book as missing
 @book_routes.route("/book", methods=['GET'])
 def book_details():
 
     id= int(request.args.get('id'))
-    book = db.session.query(Book).filter_by(id=id).first()
+    book = db.session.query(Book).filter_by(id=id).one_or_404()
     if book is not None:
         current_owner, due_date, renting_hisotry, admin = None, None, None, None
         if book.status == Status.borrowed:
-            rental = db.session.query(Rental).filter_by(book_id = book.id, return_date = None).one_or_404()
+            rental = db.session.query(Rental).filter_by(book_id = book.id, return_date = None).on()
             due_date = rental.due_date 
-            current_owner = db.session.query(User).filter_by(id=rental.user_id).one_or_404().username
+            current_owner = db.session.query(User).filter_by(id=rental.user_id).one().username
         
         jwt = verify_jwt_in_request(optional=True)  # bug: if jwt was revoked throws exception
         
