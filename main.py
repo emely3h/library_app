@@ -17,12 +17,12 @@ def create_app():
     app = Flask(__name__)
 
 
-    app.secret_key =  os.getenv("SECRET_KEY")
+    app.secret_key =  os.getenv("APP_SECRET_KEY")
     app.config["TEMPLATES_AUTO_RELOAD"] = True
 
     app.config["JWT_COOKIE_SECURE"] = False
 
-    app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=20)
@@ -43,7 +43,7 @@ def create_app():
     jwt.init_app(app)
 
     from models import db_seed
-    
+
     if __name__ == 'main':
         print('In debug mode!')
         app.run(debug=True) 
