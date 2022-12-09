@@ -83,13 +83,13 @@ class BookRequest (db.Model):
     message = db.Column(db.String(500), nullable=True)
 
 def db_seed():
-    if db.session.query(Book).filter_by(id=1) is None:
+    if db.session.query(Book).filter_by(id=1).first() is None:
         admin = User(username = 'admin', email = 'admin@gmail.com', role=Roles.admin, password = os.getenv('ADMIN_PASSWORD'))
         user1 = User(username = 'test', email = 'test@gmail.com', role=Roles.user, password = 'ASDFasdf5%')
         book1 = Book(title = 'Introduction to Software Architecture', author="author xy", description="This is the best book to learn about software architecture", status=Status.available)
         book2 = Book(title = 'Introduction to Clean Code', author="author xy", description="This is the best book to learn about clean code", status=Status.available)
         # rental = Rental(book1.id, user1.id)
-        print('TEST 1')
+        logging.info('DB just got seeded')
         try:
             db.session.add(admin)
             db.session.add(user1)
