@@ -3,112 +3,133 @@
 <h1 class="text-center">Admin Dashboard</h1>
 <br>
 <br>
+<div id="collapse-parent">
 
-<form method="POST" action="/admin/add-book" class="form-btn">
-    <input placeholder="Title" name="title" value="{{request.form.title }}">
-    <input placeholder="Author" name="author" value="{{request.form.author }}">
-    <input placeholder="description" name="description" value="{{request.form.description }}">
-    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+
+    <div class="btn-group">
+    <button id="form-btn-3" class="nav-link" type="button" data-toggle="collapse" data-target="#borrowed-collapse" aria-expanded="true" aria-controls="borrowed-collapse">Borrowed Books</button>
+    <button id="form-btn-3" class="nav-link" type="button" data-toggle="collapse" data-target="#missing-collapse"  aria-expanded="false" aria-controls="missing-collapse">Missing Books</button>
+    <button id="form-btn-3" class="nav-link" type="button" data-toggle="collapse" data-target="#request-collapse"  aria-expanded="false" aria-controls="request-collapse">Latest Book Requests</button>
+    <button id="form-btn-3" class="nav-link" type="button" data-toggle="collapse" data-target="#add-collapse" aria-expanded="false" aria-controls="add-collapse">Add Book</button>
+    <button id="form-btn-3" class="nav-link" type="button" data-toggle="collapse" data-target="#remove-collapse" aria-expanded="false" aria-controls="remove-collapse">Remove Book from Bookshelf</button>
+    </div>
     <br>
-    <button style="margin-top: 15px" id="form-btn" class="nav-link" type="submit">Add Book</button>
-</form>
-<br>
-<br>
-<br>
-<h5>Borrowed Books</h5>
-<br>
-{% for book in borrowed_books %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ book.title }}</h5>
-        <small class="text-muted">By {{book.author}}</small>
-        <br>
-        <div class="row">
-            <div class="col">
-            <form method="POST" action="/admin/book-status" class="form-btn">
-                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                <input name="id" type="hidden" value="{{book.id}}">
-                <input name="status" type="hidden" value="available">
-                <button id="form-btn" class="nav-link" type="submit">Return</button>
-            </form>
-            </div>
-            <div class="col">
-                <form method="POST" action="/admin/book-status" class="form-btn">
-                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                <input name="id" type="hidden" value="{{book.id}}">
-                <input name="status" type="hidden" value="missing">
-                <button id="form-btn" class="nav-link" type="submit">Missing</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-<br>
-<br>
-<h5>Missing Books</h5>
-<br>
-<br>
-{% for book in missing_books %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ book.title }}</h5>
-        <small class="text-muted">By {{book.author}}</small>
-        <br>
-        <form method="POST" action="/admin/book-status" class="form-btn">
-            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-            <input name="id" type="hidden" value="{{book.id}}">
-            <input name="status" type="hidden" value="available">
-            <button id="form-btn" class="nav-link" type="submit">Found and returned</button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-<br>
-<br>
-<h5>Latest Book Requests</h5>
-<br>
-<br>
-{% for request in book_request %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ request.title }}</h5>
-        <small class="text-muted">By {{request.author}}</small>
-        <br>
-        <p>{{ request.message }}</p>
-        <form method="POST" action="/admin/book-request" class="form-btn">
-            <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-            <input name="id" type="hidden" value="{{ request.id }}">
-            <button id="form-btn" class="nav-link" type="submit">Delete Request</button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-<br>
-<br>
-<h5>All Books</h5>
-<br>
-<br>
-{% for book in all_books %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ book.title }}</h5>
-        <small class="text-muted">By {{book.author}}</small>
-        <br>
-        <div class="row">
-            <div class="col">
-            <form method="POST" action="/admin/book-status" class="form-btn">
-                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                <input name="id" type="hidden" value="{{book.id}}">
-                <input name="status" type="hidden" value="removed">
-                <button id="form-btn" class="nav-link" type="submit">Remove</button>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
-{% endfor %}
-</div> 
+    <br>
+    <div class="accordion-group">
 
+
+        <div class="collapse show" id="borrowed-collapse" data-parent="#collapse-parent">
+            {% if borrowed_books is defined and borrowed_books|length > 0 %}
+                {% for book in borrowed_books %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <small class="text-muted">By {{book.author}}</small>
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                <form method="POST" action="/admin/book-status" class="form-btn">
+                                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                                    <input name="id" type="hidden" value="{{book.id}}">
+                                    <input name="status" type="hidden" value="available">
+                                    <button id="form-btn" class="nav-link" type="submit">Return</button>
+                                </form>
+                                </div>
+                                <div class="col">
+                                    <form method="POST" action="/admin/book-status" class="form-btn">
+                                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                                    <input name="id" type="hidden" value="{{book.id}}">
+                                    <input name="status" type="hidden" value="missing">
+                                    <button id="form-btn" class="nav-link" type="submit">Missing</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No borrowed books.</p>
+            {% endif %}
+        </div>
+    
+
+        <div class="collapse" id="missing-collapse" data-parent="#collapse-parent">
+            {% if missing_books is defined and missing_books|length > 0 %}
+                {% for book in missing_books %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <small class="text-muted">By {{book.author}}</small>
+                            <br>
+                            <form method="POST" action="/admin/book-status" class="form-btn">
+                                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                                <input name="id" type="hidden" value="{{book.id}}">
+                                <input name="status" type="hidden" value="available">
+                                <button id="form-btn" class="nav-link" type="submit">Found and returned</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No missing books.</p>
+            {% endif %}
+        </div>
+
+        <div class="collapse" id="request-collapse" data-parent="#collapse-parent">
+            {% if book_request is defined and book_request|length > 0 %}
+                {% for request in book_request %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ request.title }}</h5>
+                            <small class="text-muted">By {{request.author}}</small>
+                            <br>
+                            <p>{{ request.message }}</p>
+                            <form method="POST" action="/admin/book-request" class="form-btn">
+                                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                                <input name="id" type="hidden" value="{{ request.id }}">
+                                <button id="form-btn" class="nav-link" type="submit">Delete Request</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                    <p>No open requests</p>
+            {% endif %}
+        </div>
+
+        <div class="collapse" id="add-collapse" data-parent="#collapse-parent">
+            <form method="POST" action="/admin/add-book" class="form-btn">
+                <input placeholder="Title" name="title" value="{{request.form.title }}">
+                <input placeholder="Author" name="author" value="{{request.form.author }}">
+                <input placeholder="description" name="description" value="{{request.form.description }}">
+                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                <button style="margin-top: 15px" id="form-btn"  type="submit">Add Book</button>
+            </form>
+        </div>
+
+        <div class="collapse" id="remove-collapse" data-parent="#collapse-parent">
+            {% for book in all_books %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <small class="text-muted">By {{book.author}}</small>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                            <form method="POST" action="/admin/book-status" class="form-btn">
+                                <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                                <input name="id" type="hidden" value="{{book.id}}">
+                                <input name="status" type="hidden" value="removed">
+                                <button id="form-btn" class="nav-link" type="submit">Remove</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<br>
+<br>
 {% endblock content %}

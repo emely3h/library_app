@@ -3,83 +3,87 @@
     <div class="container">
       <h1 class="text-center">My Books</h1>
       <br>
-      <h5>Currently rented books</h5>
-      <br>
-      {% for rental_book in rental_books %}
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ rental_book[1].title }}</h5>
-          <small class="text-muted">By {{ rental_book[1].author }}</small>
-          <p style="color:red;" class="card-text">Due date: {{ rental_book[0].due_date.strftime('%d.%m.%Y') }}</p>
-          <p>Borrowed on {{ rental_book[0].borrow_date.strftime('%d.%m.%Y') }} </p>
-          <div class="row">
-            <div class="col">
-                <form method="POST" action="/my-books/extend" class="form-btn">
-                    <input name="id" type="hidden" value="{{ rental_book[1].id }}">
-                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                    <button id="form-btn" class="nav-link" type="submit">Extend</button>
-                  </form>
-            </div>
-            <div class="col">
-                <form method="GET" action="/book" class="form-btn">
-                    <input name="id" type="hidden" value="{{ rental_book[1].id }}">
-                    <button id="form-btn" class="nav-link" type="submit">Details</button>
-                </form>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col">
+          <h5 class="center">Currently rented books</h5>
+        </div>
+        <div class="col">
+          <h5 class="center">My reading list</h5>
         </div>
       </div>
       <br>
-      {% endfor %}
       <br>
-      <br>
-      <h5>My reading list</h5>
-      <br>
-      {%for book in reading_list %}
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <h5 class="card-title">{{ book.title }}</h5>
-              </div>
-              <div class="col">
-                <form method="POST" action="/reading-list" class="form-btn">
-                  <input name="id" type="hidden" value="{{ book.id }}">
-                  <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                  <input name="method" type="hidden" value="delete">
-                  <button id="form-btn" class="nav-link" type="submit">Remove</button>
-                </form>
+      <div class="row">
+        <div class="col">
+          {% for rental_book in rental_books %}
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{ rental_book[1].title }}</h5>
+                <small class="text-muted">By {{ rental_book[1].author }}</small>
+                <p class="borrowed">Due date: {{ rental_book[0].due_date.strftime('%d.%m.%Y') }}</p>
+                <p class="available">Borrowed on: {{ rental_book[0].borrow_date.strftime('%d.%m.%Y') }} </p>
+                <div class="btn-group">
+                  <form method="POST" action="/my-books/extend" class="form-btn">
+                      <input name="id" type="hidden" value="{{ rental_book[1].id }}">
+                      <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                      <button id="form-btn" class="nav-link" type="submit">Extend</button>
+                    </form>
+                  <form method="GET" action="/book" class="form-btn">
+                      <input name="id" type="hidden" value="{{ rental_book[1].id }}">
+                      <button id="form-btn" class="nav-link" type="submit">Details</button>
+                  </form>
+                </div>
               </div>
             </div>
-            <small class="text-muted">By {{book.author}}</small>
-            <p class="card-text {{book.status.name}}">{{book.status.name}}</p>
-            <div class="row">
-              <div class="col">
-                {% if book.status.name == "available" %}
-                <form method="POST" action="/borrow-book" class="form-btn">
-                  <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                  <input name="id" type="hidden" value="{{ book.id }}">
-                  <button id="form-btn" class="nav-link" type="submit">Borrow</button>
-                </form>
-                {% elif book.status.name == "borrowed" %}
-                <form method="POST" action="/request-book" class="form-btn">
-                  <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                  <input name="id" type="hidden" value="{{ book.id }}">
-                  <button id="form-btn" class="nav-link" type="submit">Request</button>
-                </form>
-                {% endif %}
-              </div>
-              <div class="col">
-                <form method="GET" action="/book" class="form-btn">
-                  <input name="id" type="hidden" value="{{ book.id }}">
-                  <button id="form-btn" class="nav-link" type="submit">Details</button>
-                </form>
-              </div>
-            </div>
-          </div>
+            <br>
+          {% endfor %}
         </div>
-        <br>
-  {% endfor %}
+        <div class="col">
+            {%for book in reading_list %}
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                  </div>
+                 
+                </div>
+                <small class="text-muted">By {{book.author}}</small>
+                <p class="card-text {{book.status.name}}">{{book.status.name}}</p>
+                <p>{{ book.description|truncate(50) }}</p>
+                <div class="btn-group">
+                  
+                  {% if book.status.name == "available" %}
+                    <form method="POST" action="/borrow-book" class="form-btn">
+                      <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                      <input name="id" type="hidden" value="{{ book.id }}">
+                      <button id="form-btn" class="nav-link" type="submit">Borrow</button>
+                    </form>
+                  {% elif book.status.name == "borrowed" %}
+                    <form method="POST" action="/request-book" class="form-btn">
+                      <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                      <input name="id" type="hidden" value="{{ book.id }}">
+                      <button id="form-btn" class="nav-link" type="submit">Request</button>
+                    </form>
+                  {% endif %}
+                  <form method="POST" action="/reading-list" class="form-btn">
+                    <input name="id" type="hidden" value="{{ book.id }}">
+                    <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
+                    <input name="method" type="hidden" value="delete">
+                    <button id="form-btn" class="nav-link" type="submit">Remove</button>
+                  </form>
+                    <form method="GET" action="/book" class="form-btn">
+                      <input name="id" type="hidden" value="{{ book.id }}">
+                      <button id="form-btn" class="nav-link" type="submit">Details</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+            <br>
+            {% endfor %}
+        </div>
+      </div>
+
   {% endblock content %}
 </html>
 

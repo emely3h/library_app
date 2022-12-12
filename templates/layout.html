@@ -6,6 +6,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css')}}">
 </head>
 <body>
@@ -19,33 +21,33 @@
             <ul class="navbar-nav">
               <li class="nav-item">
                 <form method="GET" action="/my-books" class="form-btn">
-                  <button id="form-btn" class="nav-link" type="submit">My Books</button>
+                  <button id="form-btn-2" class="nav-link" type="submit">My Books</button>
                 </form>
               </li>
               <li class="nav-item">
                 <form method="GET" action="/book-request" class="form-btn">
-                  <button id="form-btn" class="nav-link" type="submit">Book Request</button>
+                  <button id="form-btn-2" class="nav-link" type="submit">Book Request</button>
                 </form>
               </li>
               <li class="nav-item">
                 <form method="GET" action="/admin" class="form-btn">
-                  <button id="form-btn" class="nav-link" type="submit">Admin</button>
+                  <button id="form-btn-2" class="nav-link" type="submit">Admin</button>
                 </form>
                 </li>
               <li class="nav-item">
                 <form method="POST" action="/auth/logout">
                   <input name="csrf_token" type="hidden" value="{{ csrf_token }}">
-                  <button  id="form-btn" class="nav-link" type="submit">Logout</button>
+                  <button  id="form-btn-2" class="nav-link" type="submit">Logout</button>
                 </form>
               </li>
               <li class="nav-item">
                 <form method="GET" action="/auth/login" class="form-btn">
-                  <button id="form-btn" class="nav-link" type="submit">Log in</button>
+                  <button id="form-btn-2" class="nav-link" type="submit">Log in</button>
                 </form>
               </li>
               <li class="nav-item">
                 <form method="GET" action="/auth/register" class="form-btn">
-                  <button id="form-btn" class="nav-link" type="submit">Register</button>
+                  <button id="form-btn-2" class="nav-link" type="submit">Register</button>
                 </form>
               </li>
             </ul>
