@@ -26,8 +26,8 @@ def admin_required():
 @admin_routes.route("/admin", methods=['GET'])
 @admin_required()
 def admin_page():
-    borrowed_books = db.session.query(Book).filter_by(status=Status.borrowed)
-    missing_books = db.session.query(Book).filter_by(status=Status.missing)
+    borrowed_books = db.session.query(Book).filter_by(status=Status.borrowed).all()
+    missing_books = db.session.query(Book).filter_by(status=Status.missing).all()
     all_books = db.session.query(Book).filter(Book.status != Status.removed).all()
     book_requests = db.session.query(BookRequest).all()
     csrf = get_csrf_token(request.cookies.get('access_token_cookie'))

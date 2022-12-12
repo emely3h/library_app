@@ -26,7 +26,7 @@ def sign_up():
                 access_token = create_access_token(identity=user.id)
                 response = redirect(url_for('home_routes.home'))
                 set_access_cookies(response, access_token)
-                flash(f'Successfully logged in. Welcome {user.username}!', 'info')
+                flash(f'Successfully logged in. Welcome {user.username}!', 'success')
                 return response
                     
             else:
@@ -141,7 +141,7 @@ def check_email(email):
         return False 
 
 def check_password(password):
-    if len(password) >= 6 and len(password) <= 20 and any(char.isdigit() for char in password) \
+    if len(password) >= 8 and len(password) <= 20 and any(char.isdigit() for char in password) \
         and any(char.isupper() for char in password) and any(char.islower() for char in password):
         return True
     else:

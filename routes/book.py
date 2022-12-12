@@ -16,7 +16,7 @@ def book_details():
     if book is not None:
         current_owner, due_date, renting_hisotry, admin = None, None, None, None
         if book.status == Status.borrowed:
-            rental = db.session.query(Rental).filter_by(book_id = book.id, return_date = None).on()
+            rental = db.session.query(Rental).filter_by(book_id = book.id, return_date = None).one()
             due_date = rental.due_date 
             current_owner = db.session.query(User).filter_by(id=rental.user_id).one().username
         

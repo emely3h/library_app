@@ -10,7 +10,7 @@ Prerequisites: python3, pip
 
 `$ flask --app main run`
 
-The app can be accessed at localhost:5000
+The app can be accessed via [localhost:5000](localhost:5000)
 
 
 ## Security Measurements
@@ -19,13 +19,8 @@ The app can be accessed at localhost:5000
 - Authorization (user role, admin role)
 - Input validation
 - Security Headers
-  - same site origin policy
-  - Content-Security-Policy
-  - Strict-Transport-Security'
-  - Cross-origin resource sharing
 - Cookie policy
-- https enforced
-- SSL certificate provided by pythonanywhere
+- HTTPS enforced, SSL certificate provided by pythonanywhere
 - Password security
 - XSS protection
 - CSRF protection
@@ -43,32 +38,30 @@ The [flask application](emely3h.pythonanywhere.com) is deployed using pythonanyw
 ![thread model](docs/thread_model.png "Thread Model")
 
 
-## Routing
+## Features
 
-Routes created in the backend:
-
-  all users
-  - GET /
-  - GET /book-request
-  - GET /auth/login
-  - GET /auth/register
-  - POST /auth/login
-  - POST /auth/register
-  - GET /book?id=1
+  All users are able to:
+  - view all books in the bookshelf
+  - log in
+  - register
+  - view details of a book
+  - make a book request
   
-  Logged in users only
-  - POST /borrow-book
-  - POST /reading-list
-  - POST /auth/logout
-  - GET /my-books
-  - POST /my-books/extend
-  - POST /book-request
-  - DELETE /reading-list
+  Logged in users are able to:
+  - access the my-books page and view all their borrowed books, their due dates and their reading list
+  - borrow a book
+  - extend a book if it was not requested by an other user
+  - request a book
+  - log out
   
-  admin(s) only
-  - GET /admin
-  - POST /admin/add-book
-  - POST /admin/book-status # PUT?
+  Admin(s) are able to:
+  - access the admin page and view all currently borrowed or missing books and the latest book requests
+  - add books to the bookshelf
+  - remove books from the bookshelf
+  - delete a book request
+  - return a book
+  - mark a book as missing
+  - view the renting history of every book
 
 ## DB doc
 

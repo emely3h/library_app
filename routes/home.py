@@ -78,7 +78,7 @@ def reading_list():
     
     if method == 'add': #request.method == 'POST':
         if book in current_user.books:
-            flash('This book already has been added to your reading list.', 'info')
+            flash('This book already has been added to your reading list.', 'success')
         else:
             current_user.books.append(book)
             db.session.add(current_user)
@@ -86,7 +86,7 @@ def reading_list():
             flash('Book successfully added to your reading list.', 'success')
     if method == 'delete': #elif request.method == 'DELETE':
         if book not in current_user.books:
-            flash('This book is not in your reading list.', 'info')
+            flash('This book is not in your reading list.', 'success')
         else:
             current_user.books.remove(book)
             db.session.add(current_user)
