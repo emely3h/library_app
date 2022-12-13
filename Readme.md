@@ -20,7 +20,7 @@ The app can be accessed via [localhost:5000](localhost:5000)
 - Input validation
 - Security Headers
 - Cookie policy
-- HTTPS enforced, SSL certificate provided by pythonanywhere
+- HTTPS enforced, TLS certificate provided by pythonanywhere
 - Password security
 - XSS protection
 - CSRF protection
