@@ -16,8 +16,8 @@ def internal_server_error(e):
 
 @current_app.after_request
 def security_headers(response):
-    #response.headers['Content-Security-Policy'] = "default-src 'self' style-src https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    # response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
-    # response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    # response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Content-Security-Policy'] = "default-src 'self' style-src https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css; script-src https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
