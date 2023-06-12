@@ -66,3 +66,6 @@ The [flask application](emely3h.pythonanywhere.com) is deployed using pythonanyw
 ## DB doc
 
 ![db schema](docs/db_schema.png "DB Schema")
+
+
+
